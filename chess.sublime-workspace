@@ -1,0 +1,281 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"watcher",
+				"watchers"
+			],
+			[
+				"readfile",
+				"fs.readFileSync(path, encoding);"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "module.exports = function(app) {\n  return new ChessRemote(app);\n};\n\nvar ChessRemote = function(app) {\n    this.app = app;\n    this.channelService = app.get('channelService');\n};\n\n/**\n * Add user into chat channel.\n *\n * @param {String} uid unique id for user\n * @param {String} sid server id\n * @param {String} name channel name\n * @param {boolean} flag channel parameter\n * @param {Callback} cb\n *\n */\nChatRemote.prototype.add = function(uid, sid, room, role, cb) {\n	var channel = null;\n	if(role == 'host')\n	{\n		channel = this.channelService.getChannel(room, true);\n		channel.hostUser = uid.split('*')[0];\n		channel.watchers = [];\n	}\n	else if(role == 'guest')\n	{\n		channel = this.channelService.getChannel(room, false);\n		channel.guestUser = uid.split('*')[0];\n	}\n	else if(role == 'watcher')\n	{\n		channel = this.channelService.getChannel(room, false);\n		channel.watchers.push(uid.split('*')[0]);\n	}\n  	if( !! channel) {\n  		channel.add(uid, sid);\n 	 }\n  	cb(this.get(room));\n};\n\n/**\n * Get user from chat channel.\n *\n * @param {Object} opts parameters for request\n * @param {String} name channel name\n * @param {boolean} flag channel parameter\n * @return {Array} users uids in channel\n *\n */\nChatRemote.prototype.get = function(room) {\n  var users = null;\n  var channel = this.channelService.getChannel(name, false);\n  if( !! channel) {\n  	users = {};\n  	users.host = channel.hostUser;\n  	users.guest = channel.guestUser;\n  	users.watchers = channel.watchers;\n  }\n\n  return users;\n};\n\n/**\n * Kick user out chat channel.\n *\n * @param {String} uid unique id for user\n * @param {String} sid server id\n * @param {String} name channel name\n *\n */\nChatRemote.prototype.kick = function(uid, sid, role,room) {\n  var channel = this.channelService.getChannel(room, false);\n  // leave channel\n  if( !! channel) {\n    channel.leave(uid, sid);\n    if()\n  }\n};",
+			"file": "game-server/app/servers/chess/remote/chessRemote.js",
+			"file_size": 1833,
+			"file_write_time": 1354257033000000,
+			"settings":
+			{
+				"buffer_size": 1847,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "module.exports = function(app) {\n	return new Handler(app);\n};\n\nvar Handler = function(app) {\n		this.app = app;\n	};\n\nvar handler = Handler.prototype;\n\nhandler.hostRoom = function(msg, session, next) {\n	var self = this;\n	var rid = msg.room;\n	var uid = msg.username + '*' + rid\n	var sessionService = self.app.get('sessionService');\n\n	//duplicate log in\n	if( !! sessionService.getByUid(uid)) {\n		next(null, {\n			code: 500,\n			error: true\n		});\n		return;\n	}\n\n	session.bind(uid);\n	session.set('rid', rid);\n	session.set('role','host');\n	session.push('rid', function(err) {\n		if(err) {\n			console.error('set rid for session service failed! error is : %j', err.stack);\n		}\n	});\n	session.on('closed', onUserLeave.bind(null, self.app));\n\n	//put user into channel\n	self.app.rpc.chat.chatRemote.add(session, uid, self.app.get('serverId'), rid, true, function(users) {\n		next(null, {\n			code: 200,\n			users: users\n		});\n	});\n};\n\n/**\n * User log out handler\n *\n * @param {Object} app current application\n * @param {Object} session current session object\n *\n */\nvar onUserLeave = function(app, session) {\n		if(!session || !session.uid) {\n			return;\n		}\n		app.rpc.chat.chessRemote.kick(session, session.uid, app.get('serverId'), session.get('rid'), null);\n	};",
+			"settings":
+			{
+				"buffer_size": 1242,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/Nodejs/Nodejs.sublime-build",
+	"command_palette":
+	{
+		"height": 107.0,
+		"selected_items":
+		[
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"pack",
+				"Package Control: List Packages"
+			],
+			[
+				"",
+				"Package Control: Add Repository"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"packa",
+				"Package Control: List Packages"
+			],
+			[
+				"install g",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 602.0
+	},
+	"console":
+	{
+		"height": 114.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/kaede/Library/Application Support/Sublime Text 2/Packages/GBK Encoding Support/tmp/jquery-1.8.0.min.js                %2FUsers%2Fkaede%2FDocuments%2FProject%2FNodeJs%2Fchatofpomelo%2Fweb-server%2Fpublic%2Fjs%2Flib%2Fjquery-1.8.0.min.js",
+		"/Users/kaede/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/Users/kaede/Library/Application Support/Sublime Text 2/Packages/Default/Default (OSX).sublime-keymap",
+		"/Users/kaede/Library/Application Support/Sublime Text 2/Packages/Nodejs/Nodejs.sublime-settings",
+		"/Users/kaede/Library/Application Support/Sublime Text 2/Packages/User/Nodejs.sublime-settings",
+		"/Users/kaede/Documents/Project/NodeJs/partime/requestHandler.js",
+		"/Users/kaede/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/kaede/Documents/Project/NodeJs/partime/app.js",
+		"/Users/kaede/Documents/hosts"
+	],
+	"find":
+	{
+		"height": 38.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"route",
+			"tuid",
+			"route",
+			"createChennel",
+			"param",
+			"updateSelectUsers",
+			"initSelectUsers",
+			"users",
+			"selected",
+			"route",
+			"updateSelectUsers",
+			"showChat",
+			"setName",
+			"initSelectUsers",
+			"createChannel",
+			"getUsers",
+			"showLogin",
+			"connector",
+			"chat",
+			"usersList",
+			"tab",
+			"();\n",
+			"cancel build"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "game-server/app/servers/chess/remote/chessRemote.js",
+					"settings":
+					{
+						"buffer_size": 1847,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1840,
+								1840
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1182.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"settings":
+					{
+						"buffer_size": 1242,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								453,
+								453
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 162.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 36.0
+	},
+	"input":
+	{
+		"height": 36.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 142.0
+	},
+	"replace":
+	{
+		"height": 70.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 203.0,
+	"status_bar_visible": true
+}

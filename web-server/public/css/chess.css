@@ -1,0 +1,115 @@
+@charset "utf-8";
+/* CSS Document */
+*{ margin:0px; padding:0px;}
+body{ font-size:12px; background:#b1723c;}
+ul,ol,li{ list-style:none;}
+.main{ width:1000px; margin:10px auto;}
+/* Ô´ÂëÀ´×Ô£ºÁÒ»ðÍø www.veryhuo.com/down */
+.piece{ display:block; height:34px; width:34px;  z-index:0; position:relative; -moz-box-shadow:2px 2px 1px rgba(0, 0, 0, 0.45); -moz-border-radius:18px; position:absolute; z-index:99;}
+.piece i{ content:""; display:block; height:33px; width:33px; z-index:2; -moz-transform:rotate(-40deg); -moz-border-radius:17px; position:absolute; left:0px; top:0px; _display:none;}
+.piece:before{ content:""; display:block; height:12px; width:20px;z-index:1;-moz-border-radius:10px/6px; position:absolute; left:2px; top:2px; -moz-transform:rotate(-35deg);}
+.piece:after{ content:""; display:block; height:12px; width:20px;z-index:1;-moz-border-radius:10px/6px; position:absolute; bottom:1px; right:1px;-moz-transform:rotate(-35deg);}
+
+.black{ background: url(../images/black.png) no-repeat left top; border:none; border:1px solid rgba(0,0,0,0.8); background:rgba(0,0,0,0.95);_background-image:url(../images/black_6.png);}
+.black i{background:-moz-linear-gradient(-90deg,rgba(255,255,255,0.32),rgba(255,255,255,0.01) 65%,rgba(255,255,255,0.01));}
+.black:before{background:-moz-linear-gradient(-90deg,rgba(255,255,255,0.6),rgba(255,255,255,0.02));}
+.black:after{ background:-moz-linear-gradient(-90deg,rgba(255,255,255,0.01),rgba(255,255,255,0.15));}
+
+.white{ background: url(../images/white.png) no-repeat left top; border:none; background:rgba(202,202,202,1); border:1px solid rgba(0,0,0,0.35); _background-image:url(../images/white_6.png);}
+.white i{background:-moz-linear-gradient(-90deg,rgba(255,255,255,0.65),rgba(255,255,255,0.15) 65%,rgba(255,255,255,0.01));}
+.white:before{background:-moz-linear-gradient(-90deg,rgba(255,255,255,0.8),rgba(255,255,255,0.2));}
+.white:after{background:-moz-linear-gradient(-90deg,rgba(255,255,255,0.1),rgba(255,255,255,0.2));}
+
+.chessboardBox{ padding:30px; background:#f0c287; border:4px double #5a3405; -moz-box-shadow:inset 0px 0px 5px rgba(89,51,4,0.6); height:575px; width:575px; position: relative; margin:20px auto;}
+.chessboardBox:after{content:""; -moz-box-shadow:0px 0px 5px rgba(89,51,4,1); height:643px; width:643px; display:block; position: absolute; left:-4px; top:-4px;}
+.chessboard_bg{ border:1px solid #3c271b; border:1px solid rgba(15,0,0,0.8); border-bottom:none; border-right:none; position:absolute; left:30px; top:30px;}
+.chessboard_bg td{ height:40px; width:40px;border:1px solid #3c271b; border:1px solid rgba(15,0,0,0.8); border-left:none; border-top:none; display:block; float:left; position:relative; line-height:40px; text-align:center; color:rgba(0,0,0,0); overflow:hidden; text-indent:-9999px;}
+.chessboard_bg td:after{content:""; height:38px; width:38px; position: absolute; left:0px; top:0px; border:1px solid rgba(255,255,255,0.4);}
+
+.iBox{ height:615px; width:615px; position: absolute; left:10px; top:10px; z-index:3;}
+.iBox i{ display:block; height:40px; width:40px; position:absolute; cursor:pointer;line-height:40px; text-align:center;color:rgba(0,0,0,0.2); text-indent:-9999px; overflow:hidden;}
+
+.mouseBox{ height:42px; width:42px; position: absolute;}
+.mouseP{ height:5px; width:5px; border:1px solid #f00; position:absolute; display:block;}
+.mouseLT{ border-right:none; border-bottom:none; left:0px; top:0px;}
+.mouseRT{ border-left:none; border-bottom:none; right:0px; top:0px;}
+.mouseLB{ border-right:none; border-top:none; left:0px; bottom:0px;}
+.mouseRB{ border-left:none; border-top:none; right:0px; bottom:0px;}
+
+.holdOnLayer{ position:absolute; height:635px; width:635px; background:#000; left:0px; top:0px; background:rgba(0,0,0,0.1); z-index:99; line-height:635px; text-align:center; color:#fff; text-shadow:1px 1px 0px #000; font-size:14px; display:none; _filter:alpha(opacity=20);}
+
+.piece{-webkit-box-shadow:2px 2px 1px rgba(0, 0, 0, 0.45); -webkit-border-radius:18px;}
+.piece i{-webkit-transform:rotate(-40deg); -webkit-border-radius:17px;}
+.piece:before{-webkit-border-radius:10px/6px;-webkit-transform:rotate(-35deg);}
+.piece:after{-webkit-border-radius:10px/6px;-webkit-transform:rotate(-35deg);}
+
+.black i{background: -webkit-gradient(linear,0 0,0 100%, from(rgba(255,255,255,0.32)),color-stop(65%, rgba(255,255,255,0.01)),to(rgba(255,255,255,0.01)));}
+.black:before{background:-webkit-gradient(linear,0 0,0 100%, from(rgba(255,255,255,0.6)),to(rgba(255,255,255,0.02)));}
+.black:after{ background:-webkit-gradient(linear,0 0,0 100%, from(rgba(255,255,255,0.01)),to(rgba(255,255,255,0.15)));}
+
+.white i{background:-webkit-gradient(linear,0 0,0 100%, from(rgba(255,255,255,0.65)),color-stop(65%, rgba(255,255,255,0.15)),to(rgba(255,255,255,0.01)));}
+.white:before{background:-webkit-gradient(linear,0 0,0 100%, from(rgba(255,255,255,0.8)),to(rgba(255,255,255,0.2)));}
+.white:after{background:-webkit-gradient(linear,0 0,0 100%, from(rgba(255,255,255,0.1)),to(rgba(255,255,255,0.2)));}
+
+.chessboardBox{-webkit-box-shadow:inset 0px 0px 5px rgba(89,51,4,0.6); }
+.chessboardBox:after{-webkit-box-shadow:0px 0px 5px rgba(89,51,4,1);}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

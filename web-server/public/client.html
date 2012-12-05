@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>
+            chess
+        </title>
+        <link rel="stylesheet" href="style.css" type="text/css" />
+        <script src="js/lib/jquery-1.8.0.min.js">
+                                                        
+        </script>
+        <script src="js/lib/socket.io.js">
+                                                        
+        </script>
+        <script src="js/lib/pomeloclient.js">
+                                                        
+        </script>
+        <script src="js/client.js">
+                                                        
+        </script>
+    </head>
+    
+    <body>
+        <ul id="client">
+                    <li>
+                        users:
+                        <select name="room" id="roomSelect">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </li>
+                    <li>
+                        <input type="text" id="userName" placeholder="input user name"/>
+                    </li>
+                    <li>
+                        <button onclick='onCreate()'>create</button>
+                    </li>
+                    <li>
+                        <button onclick='onJoin()'>join</button>
+                    </li>
+                    <li>
+                        <button onclick='onQueryStatus()'>query</button>
+                    </li>
+                    <li>
+                        <button onclick='onPlayChess()'>send</button>
+                    </li>
+                </ul>
+    </body>
+</html>
