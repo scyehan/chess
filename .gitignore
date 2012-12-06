@@ -1,4 +1,5 @@
 .DS_Store
+game-server/logs/
 lib-cov
 *.seed
 *.log
