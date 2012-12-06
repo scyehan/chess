@@ -35,9 +35,9 @@ ChessRemote.prototype.initChannel = function(channelId) {
   return channel;
 }
 
-ChessRemote.prototype.kick = function(chennelId, uid) {
+ChessRemote.prototype.kick = function(channelId, uid,sid) {
   var channel = this.channelService.getChannel(channelId, false);
-  channel.leave(player.uid, player.sid);
-  var player = channel.userMap[player.uid];
+  var player = channel.userMap[uid];
+  channel.leave(uid, sid);
   this.handler.doExit(channel, player);
 }

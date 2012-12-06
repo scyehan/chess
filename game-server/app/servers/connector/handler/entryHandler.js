@@ -55,5 +55,5 @@ var onUserLeave = function(app, session) {
 	if (!session || !session.uid) {
 		return;
 	}
-	app.rpc.chess.chessRemote.kick(session, session.get('channel'),session.uid);
+	app.rpc.chess.chessRemote.kick(session, session.get('channel'),session.uid,session.get('sid'));
 };
