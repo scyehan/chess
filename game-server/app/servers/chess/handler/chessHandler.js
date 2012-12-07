@@ -68,17 +68,29 @@ handler.begin = function(msg, session, next) {
      var channel = this.channelService.getChannel(session.get('channel'), false);
 
      if ( !! channel) {
-          console.log('begin room:' + msg.room);
+          //console.log('begin room:' + msg.room);
           var player = channel.userMap[session.uid];
-          if (channel.rooms[player.room].status == 'ready' || channel.rooms[player.room].status == 'finish') {
-               channel.rooms[player.room].begin();
+          //if (channel.rooms[player.room].status == 'ready' || channel.rooms[player.room].status == 'finish') {
+               channel.rooms[player.room].begin(player);
                channel.rooms[player.room].status = 'playing';
                this.postRoomStatus(channel);
                next(null, {
                     code: 200,
                     cmd: 'chessBegin'
                });
-          }
+          //}
+     }
+}
+
+handler.reset = function(msg, session, next) {
+     var channel = this.channelService.getChannel(session.get('channel'), false);
+     if ( !! channel) {
+          var player = channel.userMap[session.uid];
+          var gameRoom = channel.rooms[player.room];
+          if(player == gameRoom.host)
+               gameRoom.sendChessReset(gameRoom.guest);
+          else if(player == gameRoom.guest)
+               gameRoom.sendChessReset(gameRoom.host);
      }
 }
 

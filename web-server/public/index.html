@@ -1,50 +1,45 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <meta charset="utf-8" />
-        <title>Pomelo</title>
-        <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-        <meta http-equiv="content-style-type" content="text/css" />
-        <meta http-equiv="content-scripte-type" content="text/javascript" />
-        <meta name="author" content="netease" />
-        <meta name="version" content="1.0" />
-        <meta name="keywords" content="pomelo" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Table Document</title>
+        <style type="text/css" title="currentStyle">
+            @import "css/page.css";
+	    @import "css/table.css";
+            @import "css/chess.css";
+	</style>
+        <script src="js/lib/jquery-1.8.0.min.js"></script>
+        <script src="js/lib/jquery.dataTables.min.js"></script>
         <script src="js/lib/socket.io.js"></script>
         <script src="js/lib/pomeloclient.js"></script>
-        <script type="text/javascript">
-        var pomelo = window.pomelo;
-        var host = "127.0.0.1";
-        var port = "3010";
-	pomelo.on('onChess', function(data) {
-	    switch(data.cmd)
-	    {
-		case 'guestJoin':
-		    alert(data.guestName);
-		    break;
-	    }
-	});
-        function show() {
-              pomelo.init({host: host, port: port, log: true}, function() {
-              pomelo.request("connector.entryHandler.create",
-		{username:'Kaede',room:'a'},function (data) {
-                 alert(data.users.toString()); 
-             });
-          });
-        }
-     </script>
-    <link type="text/css" rel="stylesheet" href="css/base.css" />
+        <script src="js/client.js"></script>
+        <script src="js/chess.js"></script>
     </head>
-    <body>
-      <div class="g-doc">
-            <div class="g-bd">
-		<div class="g-banner" style = "border:none">
-                	<div class="logo"><div class="img"></div></div>
-            	</div>
-                <div class="g-background"><div class="g-content">Host Page</div>
-</div>
-<div class="g-link">Home: <a href="https://github.com/NetEase/pomelo">https://github.com/NetEase/pomelo</a><div>
-      <div class="g-button"><input id="test" type="button" value="Test Game Server" onclick="show()"/></div>
+    
+    <body id="dt_example">
+        <div class="piece black" style="margin:50px; top:100px; left:20px;"><i></i></div>
+        <div class="piece white" style="margin:50px; top:300px; left:20px;"><i></i></div>
+        <div class="chessboardBox"><div class="pieceBox"></div></div>
+        <div id="container">
+            <div style="text-align:center">
+                <a>UserName:</a>
+                <input type="text" id="username" />
+                <input type="button" id="loginBtn" value="登录"/>
             </div>
-       </div> 
+            <div id="demo"></div>
+        </div>
+        <div class="cooperBox">
+            <form>
+            <input type="button" id="createBtn" value="创 建"/>
+            <input type="button" id="joinBtn" value="加 入"/>
+            <input type="button" id="startBtn" value="开 始"/>
+            <input type="button" id="restartBtn" value="重 置"/>
+            <input type="button" id="exitBtn" value="离 开"/>
+            </form>
+        </div>
     </body>
 </html>
+<script language="javascript">
+    var chessboardBox=getElement(".chessboardBox")[0];
+    var pieceBox=getElementsByClassName("pieceBox")[0];
+</script>

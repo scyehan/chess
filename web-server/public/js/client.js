@@ -25,7 +25,6 @@ function chessHandler(data) {
         } else if (myrole == 'host') {
             setPiece(data.position, 'guest');
         }
-
         break;
     case 'result':
         alert(data.winner + ' win');
@@ -37,6 +36,15 @@ function chessHandler(data) {
         alert('game begin');
         startGame();
         break;
+    case 'chessReset':
+        if (confirm(data.name + ' request to restart the game?')) {
+            pomelo.request("chess.chessHandler.begin", {
+                room: room
+            }, function(data) {
+                startGame();
+            });
+        }
+        break;
     }
 }
 
@@ -44,19 +52,18 @@ function updateRoomStatus(data) {
     table.fnClearTable();
     table.fnAddData(data.rooms, true);
 
-        //$("#example tbody tr").dblclick(function(e) {
-        //    if ( !! userName) {
-        //        if (table.fnGetData(this)[2] == 'empty') createOrJoin('create');
-        //        else if (table.fnGetData(this)[2] == 'waiting') createOrJoin('join');
-        //    }
-        //});
-        $("#example tbody tr").click(function(e) {
-            if (!$(this).hasClass('row_selected')) {
-                table.$('tr.row_selected').removeClass('row_selected');
-                $(this).addClass('row_selected');
-            }
-        });
-    
+    //$("#example tbody tr").dblclick(function(e) {
+    //    if ( !! userName) {
+    //        if (table.fnGetData(this)[2] == 'empty') createOrJoin('create');
+    //        else if (table.fnGetData(this)[2] == 'waiting') createOrJoin('join');
+    //    }
+    //});
+    $("#example tbody tr").click(function(e) {
+        if (!$(this).hasClass('row_selected')) {
+            table.$('tr.row_selected').removeClass('row_selected');
+            $(this).addClass('row_selected');
+        }
+    });
 }
 
 function setEnterRoomStatus() {
@@ -153,7 +160,7 @@ $(document).ready(function() {
                     $("#username").attr("disabled", true);
                     $("#createBtn").attr("disabled", false);
                     $("#joinBtn").attr("disabled", false);
-                    
+
                     $('#demo').html('<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>');
                     table = $('#example').dataTable({
                         "aaData": data.rooms,
@@ -166,19 +173,19 @@ $(document).ready(function() {
                         }]
                     });
 
-                        //$("#example tbody tr").dblclick(function(e) {
-                        //    if ( !! userName) {
-                        //        if (table.fnGetData(this)[2] == 'empty') createOrJoin('create');
-                        //        else if (table.fnGetData(this)[2] == 'waiting') createOrJoin('join');
-                        //    }
-                        //});
-                        $("#example tbody tr").click(function(e) {
-                            if (!$(this).hasClass('row_selected')) {
-                                table.$('tr.row_selected').removeClass('row_selected');
-                                $(this).addClass('row_selected');
-                            }
-                        });
-                    
+                    //$("#example tbody tr").dblclick(function(e) {
+                    //    if ( !! userName) {
+                    //        if (table.fnGetData(this)[2] == 'empty') createOrJoin('create');
+                    //        else if (table.fnGetData(this)[2] == 'waiting') createOrJoin('join');
+                    //    }
+                    //});
+                    $("#example tbody tr").click(function(e) {
+                        if (!$(this).hasClass('row_selected')) {
+                            table.$('tr.row_selected').removeClass('row_selected');
+                            $(this).addClass('row_selected');
+                        }
+                    });
+
                 } else
                 alert(un + ' already exists in this channel');
             });
@@ -200,6 +207,14 @@ $(document).ready(function() {
             startGame();
         });
     });
+    
+    $("#restartBtn").click(function() {
+        pomelo.request("chess.chessHandler.reset", {
+            room: room
+        }, function(data) {
+        
+        });
+    });
 
     $("#exitBtn").click(function() {
         pomelo.request("chess.chessHandler.exit", {
@@ -209,7 +224,7 @@ $(document).ready(function() {
                 if (iArray != null) unbindEvent();
                 playing = false;
                 setExitRoomStatus();
-                
+
             }
         });
     });

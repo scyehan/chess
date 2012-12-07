@@ -11,7 +11,7 @@ var GameRoom = function(roomId, channelService) {
 /**
  * Api function
  */
-GameRoom.prototype.begin = function() {
+GameRoom.prototype.begin = function(player) {
      this.board = [];
      for (var i = 0; i < 15; i++) {
           this.board[i] = [];
@@ -19,7 +19,10 @@ GameRoom.prototype.begin = function() {
           this.board[i][j] = 'empty';
      }
      this.currentPlayer = this.host;
-     this.sendChessBegin();
+     if(player == this.host)
+          this.sendChessBegin(this.guest);
+     else if(player == this.guest)
+          this.sendChessBegin(this.host);
 }
 
 GameRoom.prototype.playChess = function(player, position) {
@@ -70,12 +73,21 @@ GameRoom.prototype.sendGuestJoin = function() {
      this.pushMessageToPlayer(param, this.host);
 }
 
-GameRoom.prototype.sendChessBegin = function() {
+GameRoom.prototype.sendChessBegin = function(player) {
      var param = {
           route: 'onChess',
           cmd: 'chessBegin'
      };
-     this.pushMessageToPlayer(param, this.guest);
+     this.pushMessageToPlayer(param, player);
+}
+
+GameRoom.prototype.sendChessReset = function(player) {
+     var param = {
+          route: 'onChess',
+          cmd: 'chessReset',
+          name:player.name
+     };
+     this.pushMessageToPlayer(param, player);
 }
 
 GameRoom.prototype.sendPlayerExit = function(name, player) {
