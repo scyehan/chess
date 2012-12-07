@@ -43,18 +43,20 @@ function chessHandler(data) {
 function updateRoomStatus(data) {
     table.fnClearTable();
     table.fnAddData(data.rooms, true);
-    $("#example tbody tr").dblclick(function(e) {
-        if ( !! userName) {
-            if (table.fnGetData(this)[2] == 'empty') createOrJoin('create');
-            else if (table.fnGetData(this)[2] == 'waiting') createOrJoin('join');
-        }
-    });
-    $("#example tbody tr").click(function(e) {
-        if (!$(this).hasClass('row_selected')) {
-            table.$('tr.row_selected').removeClass('row_selected');
-            $(this).addClass('row_selected');
-        }
-    });
+
+        //$("#example tbody tr").dblclick(function(e) {
+        //    if ( !! userName) {
+        //        if (table.fnGetData(this)[2] == 'empty') createOrJoin('create');
+        //        else if (table.fnGetData(this)[2] == 'waiting') createOrJoin('join');
+        //    }
+        //});
+        $("#example tbody tr").click(function(e) {
+            if (!$(this).hasClass('row_selected')) {
+                table.$('tr.row_selected').removeClass('row_selected');
+                $(this).addClass('row_selected');
+            }
+        });
+    
 }
 
 function setEnterRoomStatus() {
@@ -86,8 +88,6 @@ function createOrJoin(op) {
             room: room
         }, function(data) {
             if (data.code == 200) {
-                pomelo.on('onChess', chessHandler);
-                //alert(JSON.stringify(data.users));
                 myrole = "host";
                 setEnterRoomStatus();
             } else if (data.code == 500) {
@@ -100,8 +100,6 @@ function createOrJoin(op) {
             room: room
         }, function(data) {
             if (data.code == 200) {
-                pomelo.on('onChess', chessHandler);
-                //alert(JSON.stringify(data.users));
                 myrole = "guest";
                 setEnterRoomStatus();
             } else if (data.code == 500) {
@@ -137,7 +135,8 @@ $(document).ready(function() {
         port: port,
         log: true
     }, function() {
-
+        pomelo.on('onStatus', updateRoomStatus);
+        pomelo.on('onChess', chessHandler);
     });
 
 
@@ -154,7 +153,7 @@ $(document).ready(function() {
                     $("#username").attr("disabled", true);
                     $("#createBtn").attr("disabled", false);
                     $("#joinBtn").attr("disabled", false);
-                    pomelo.on('onStatus', updateRoomStatus);
+                    
                     $('#demo').html('<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>');
                     table = $('#example').dataTable({
                         "aaData": data.rooms,
@@ -167,18 +166,19 @@ $(document).ready(function() {
                         }]
                     });
 
-                    $("#example tbody tr").dblclick(function(e) {
-                        if ( !! userName) {
-                            if (table.fnGetData(this)[2] == 'empty') createOrJoin('create');
-                            else if (table.fnGetData(this)[2] == 'waiting') createOrJoin('join');
-                        }
-                    });
-                    $("#example tbody tr").click(function(e) {
-                        if (!$(this).hasClass('row_selected')) {
-                            table.$('tr.row_selected').removeClass('row_selected');
-                            $(this).addClass('row_selected');
-                        }
-                    });
+                        //$("#example tbody tr").dblclick(function(e) {
+                        //    if ( !! userName) {
+                        //        if (table.fnGetData(this)[2] == 'empty') createOrJoin('create');
+                        //        else if (table.fnGetData(this)[2] == 'waiting') createOrJoin('join');
+                        //    }
+                        //});
+                        $("#example tbody tr").click(function(e) {
+                            if (!$(this).hasClass('row_selected')) {
+                                table.$('tr.row_selected').removeClass('row_selected');
+                                $(this).addClass('row_selected');
+                            }
+                        });
+                    
                 } else
                 alert(un + ' already exists in this channel');
             });
@@ -194,7 +194,9 @@ $(document).ready(function() {
     });
 
     $("#startBtn").click(function() {
-        pomelo.request("chess.chessHandler.begin",{room:room}, function(data) {
+        pomelo.request("chess.chessHandler.begin", {
+            room: room
+        }, function(data) {
             startGame();
         });
     });
@@ -207,6 +209,7 @@ $(document).ready(function() {
                 if (iArray != null) unbindEvent();
                 playing = false;
                 setExitRoomStatus();
+                
             }
         });
     });
