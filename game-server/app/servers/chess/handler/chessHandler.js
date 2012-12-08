@@ -71,13 +71,13 @@ handler.begin = function(msg, session, next) {
           //console.log('begin room:' + msg.room);
           var player = channel.userMap[session.uid];
           //if (channel.rooms[player.room].status == 'ready' || channel.rooms[player.room].status == 'finish') {
-               channel.rooms[player.room].begin(player);
-               channel.rooms[player.room].status = 'playing';
-               this.postRoomStatus(channel);
-               next(null, {
-                    code: 200,
-                    cmd: 'chessBegin'
-               });
+          channel.rooms[player.room].begin(player);
+          channel.rooms[player.room].status = 'playing';
+          this.postRoomStatus(channel);
+          next(null, {
+               code: 200,
+               cmd: 'chessBegin'
+          });
           //}
      }
 }
@@ -87,10 +87,8 @@ handler.reset = function(msg, session, next) {
      if ( !! channel) {
           var player = channel.userMap[session.uid];
           var gameRoom = channel.rooms[player.room];
-          if(player == gameRoom.host)
-               gameRoom.sendChessReset(gameRoom.guest);
-          else if(player == gameRoom.guest)
-               gameRoom.sendChessReset(gameRoom.host);
+          if (player == gameRoom.host) gameRoom.sendChessReset(gameRoom.guest);
+          else if (player == gameRoom.guest) gameRoom.sendChessReset(gameRoom.host);
      }
 }
 
@@ -127,32 +125,33 @@ handler.exit = function(msg, session, next) {
           gameRoom.guest = null;
           this.postRoomStatus(channel);
           next(null, {
-                    code: 200
-               });
+               code: 200
+          });
      }
 }
 
 handler.doExit = function(channel, player) {
-
      console.log('do exit room:' + player.room);
      if ( !! channel) {
           var gameRoom = channel.rooms[player.room];
-          if (player == gameRoom.host) {
-               if (gameRoom.guest != null) {
-                    gameRoom.sendPlayerExit(player.name, gameRoom.guest);
-                    gameRoom.host = gameRoom.guest;
+          if ( !! gameRoom) {
+               if (player == gameRoom.host) {
+                    if (gameRoom.guest != null) {
+                         gameRoom.sendPlayerExit(player.name, gameRoom.guest);
+                         gameRoom.host = gameRoom.guest;
+                         gameRoom.status = 'waiting';
+                    } else {
+                         gameRoom.host = null;
+                         gameRoom.status = 'empty';
+                    }
+               } else if (player == gameRoom.guest) {
+                    console.log('doExit guest exit');
+                    gameRoom.sendPlayerExit(player.name, gameRoom.host);
                     gameRoom.status = 'waiting';
-               } else {
-                    gameRoom.host = null;
-                    gameRoom.status = 'empty';
                }
-          } else if (player == gameRoom.guest) {
-               console.log('doExit guest exit');
-               gameRoom.sendPlayerExit(player.name, gameRoom.host);
-               gameRoom.status = 'waiting';
+               gameRoom.guest = null;
+               this.postRoomStatus(channel);
           }
-          gameRoom.guest = null;
-          this.postRoomStatus(channel);
      }
 }
 

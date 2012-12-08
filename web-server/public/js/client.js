@@ -22,8 +22,12 @@ function chessHandler(data) {
     case 'playChess':
         if (myrole == 'guest') {
             setPiece(data.position, 'host');
+            $("#whitePlay").fadeIn();
+            $("#blackPlay").fadeOut();
         } else if (myrole == 'host') {
             setPiece(data.position, 'guest');
+            $("#blackPlay").fadeIn();
+            $("#whitePlay").fadeOut();
         }
         break;
     case 'result':
@@ -123,6 +127,13 @@ function playChess(position, cb) {
     }, function(data) {
         if (data.code == 200) {
             cb(data.position);
+            if (myrole == 'host') {
+                $("#whitePlay").fadeIn();
+                $("#blackPlay").fadeOut();
+            } else if (myrole == 'guest') {
+                $("#blackPlay").fadeIn();
+                $("#whitePlay").fadeOut();
+            }
         } else if (data.code == 500) alert(data.msg);
     });
 }
@@ -134,6 +145,7 @@ function startGame() {
     playing = true;
     $("#restartBtn").attr("disabled", false);
     $("#startBtn").attr("disabled", true);
+    $("#blackPlay").fadeIn();
 }
 
 $(document).ready(function() {
@@ -207,12 +219,12 @@ $(document).ready(function() {
             startGame();
         });
     });
-    
+
     $("#restartBtn").click(function() {
         pomelo.request("chess.chessHandler.reset", {
             room: room
         }, function(data) {
-        
+
         });
     });
 

@@ -6,6 +6,8 @@ var GameRoom = function(roomId, channelService) {
      this.roomId = roomId;
      this.channelService = channelService;
      this.status = 'empty';
+     this.host = null;
+     this.guest = null;
 };
 
 /**
