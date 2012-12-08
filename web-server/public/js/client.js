@@ -185,6 +185,7 @@ function login(channelId, username) {
                 port: queryPort,
                 log: true
             }, null);
+            $("#loginBtn").attr("disabled", false);
         }
     });
 
@@ -212,6 +213,7 @@ $(document).ready(function() {
 
 
     $("#loginBtn").click(function() {
+        $("#loginBtn").attr("disabled", true);
         var channelId = $("#channelList").val();
         pomelo.request("gate.gateHandler.queryEntry", {
             channelId: channelId
@@ -227,8 +229,10 @@ $(document).ready(function() {
                     if (un != '') {
                         login(channelId, un);
                     }
-                } else
-                alert(queryData.msg);
+                } else {
+                    alert(queryData.msg);
+                    $("#loginBtn").attr("disabled", false);
+                }
             });
         });
     });
