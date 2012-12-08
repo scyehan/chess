@@ -1,5 +1,5 @@
 var pomelo = window.pomelo;
-var host = "127.0.0.1";
+var host = "192.168.1.120";
 var queryPort = "3014";
 var port;
 var myrole;
@@ -181,7 +181,7 @@ function login(channelId, username) {
             alert(username + ' already exists in this channel');
             pomelo.disconnect();
             pomelo.init({
-                host: host,
+                host: window.location.hostname,
                 port: queryPort,
                 log: true
             }, null);
@@ -203,7 +203,7 @@ function startGame() {
 
 $(document).ready(function() {
     pomelo.init({
-        host: host,
+        host: window.location.hostname,
         port: queryPort,
         log: true
     }, function() {
@@ -220,7 +220,7 @@ $(document).ready(function() {
         }, function(queryData) {
             pomelo.disconnect();
             pomelo.init({
-                host: host,
+                host: window.location.hostname,
                 port: queryData.port,
                 log: true
             }, function() {
