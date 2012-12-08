@@ -1,6 +1,6 @@
 var pomelo = window.pomelo;
 var host = "127.0.0.1";
-var port = "3010";
+var port = "3014";
 var myrole;
 var table;
 var playing = false;
@@ -138,6 +138,50 @@ function playChess(position, cb) {
     });
 }
 
+function login(channelId, username) {
+    pomelo.request("connector.entryHandler.login", {
+        username: username,
+        channelId: channelId
+    }, function(data) {
+        if (data.code == 200) {
+            userName = username;
+            $("#loginBtn").attr("disabled", true);
+            $("#username").attr("disabled", true);
+            $("#createBtn").attr("disabled", false);
+            $("#joinBtn").attr("disabled", false);
+            $("#channelList").attr("disabled", true);
+
+            $('#demo').html('<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>');
+            table = $('#example').dataTable({
+                "aaData": data.rooms,
+                "aoColumns": [{
+                    "sTitle": "Room"
+                }, {
+                    "sTitle": "Host"
+                }, {
+                    "sTitle": "Status"
+                }]
+            });
+
+            //$("#example tbody tr").dblclick(function(e) {
+            //    if ( !! userName) {
+            //        if (table.fnGetData(this)[2] == 'empty') createOrJoin('create');
+            //        else if (table.fnGetData(this)[2] == 'waiting') createOrJoin('join');
+            //    }
+            //});
+            $("#example tbody tr").click(function(e) {
+                if (!$(this).hasClass('row_selected')) {
+                    table.$('tr.row_selected').removeClass('row_selected');
+                    $(this).addClass('row_selected');
+                }
+            });
+
+        } else
+        alert(username + ' already exists in this channel');
+    });
+
+}
+
 function startGame() {
     pieceBox.innerHTML = "";
     createMap();
@@ -160,48 +204,25 @@ $(document).ready(function() {
 
 
     $("#loginBtn").click(function() {
-        var un = $("#username").val();
-        if (un != '') {
-            pomelo.request("connector.entryHandler.login", {
-                username: un,
-                channelId: '1'
-            }, function(data) {
-                if (data.code == 200) {
-                    userName = un;
-                    $("#loginBtn").attr("disabled", true);
-                    $("#username").attr("disabled", true);
-                    $("#createBtn").attr("disabled", false);
-                    $("#joinBtn").attr("disabled", false);
-
-                    $('#demo').html('<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>');
-                    table = $('#example').dataTable({
-                        "aaData": data.rooms,
-                        "aoColumns": [{
-                            "sTitle": "Room"
-                        }, {
-                            "sTitle": "Host"
-                        }, {
-                            "sTitle": "Status"
-                        }]
-                    });
-
-                    //$("#example tbody tr").dblclick(function(e) {
-                    //    if ( !! userName) {
-                    //        if (table.fnGetData(this)[2] == 'empty') createOrJoin('create');
-                    //        else if (table.fnGetData(this)[2] == 'waiting') createOrJoin('join');
-                    //    }
-                    //});
-                    $("#example tbody tr").click(function(e) {
-                        if (!$(this).hasClass('row_selected')) {
-                            table.$('tr.row_selected').removeClass('row_selected');
-                            $(this).addClass('row_selected');
-                        }
-                    });
-
+        var channelId = $("#channelList").val();
+        pomelo.request("gate.gateHandler.queryEntry", {
+            channelId: channelId
+        }, function(queryData) {
+            pomelo.disconnect();
+            pomelo.init({
+                host: queryData.host,
+                port: queryData.port,
+                log: true
+            }, function() {
+                if (queryData.code == 200) {
+                    var un = $("#username").val();
+                    if (un != '') {
+                        login(channelId, un);
+                    }
                 } else
-                alert(un + ' already exists in this channel');
+                alert(queryData.msg);
             });
-        }
+        });
     });
 
     $("#createBtn").click(function() {
