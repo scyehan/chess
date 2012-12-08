@@ -1,6 +1,7 @@
 var pomelo = window.pomelo;
 var host = "127.0.0.1";
-var port = "3014";
+var queryPort = "3014";
+var port;
 var myrole;
 var table;
 var playing = false;
@@ -176,8 +177,15 @@ function login(channelId, username) {
                 }
             });
 
-        } else
-        alert(username + ' already exists in this channel');
+        } else {
+            alert(username + ' already exists in this channel');
+            pomelo.disconnect();
+            pomelo.init({
+                host: host,
+                port: queryPort,
+                log: true
+            }, null);
+        }
     });
 
 }
@@ -195,7 +203,7 @@ function startGame() {
 $(document).ready(function() {
     pomelo.init({
         host: host,
-        port: port,
+        port: queryPort,
         log: true
     }, function() {
         pomelo.on('onStatus', updateRoomStatus);
