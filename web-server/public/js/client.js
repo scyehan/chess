@@ -218,7 +218,7 @@ $(document).ready(function() {
         }, function(queryData) {
             pomelo.disconnect();
             pomelo.init({
-                host: queryData.host,
+                host: host,
                 port: queryData.port,
                 log: true
             }, function() {
