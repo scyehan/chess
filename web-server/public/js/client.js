@@ -1,6 +1,7 @@
 var pomelo = window.pomelo;
-var host = "127.0.0.1";
-var port = "3014";
+var host = "192.168.1.120";
+var queryPort = "3014";
+var port;
 var myrole;
 var table;
 var playing = false;
@@ -176,8 +177,16 @@ function login(channelId, username) {
                 }
             });
 
-        } else
-        alert(username + ' already exists in this channel');
+        } else {
+            alert(username + ' already exists in this channel');
+            pomelo.disconnect();
+            pomelo.init({
+                host: window.location.hostname,
+                port: queryPort,
+                log: true
+            }, null);
+            $("#loginBtn").attr("disabled", false);
+        }
     });
 
 }
@@ -194,8 +203,8 @@ function startGame() {
 
 $(document).ready(function() {
     pomelo.init({
-        host: host,
-        port: port,
+        host: window.location.hostname,
+        port: queryPort,
         log: true
     }, function() {
         pomelo.on('onStatus', updateRoomStatus);
@@ -204,13 +213,14 @@ $(document).ready(function() {
 
 
     $("#loginBtn").click(function() {
+        $("#loginBtn").attr("disabled", true);
         var channelId = $("#channelList").val();
         pomelo.request("gate.gateHandler.queryEntry", {
             channelId: channelId
         }, function(queryData) {
             pomelo.disconnect();
             pomelo.init({
-                host: queryData.host,
+                host: window.location.hostname,
                 port: queryData.port,
                 log: true
             }, function() {
@@ -219,8 +229,10 @@ $(document).ready(function() {
                     if (un != '') {
                         login(channelId, un);
                     }
-                } else
-                alert(queryData.msg);
+                } else {
+                    alert(queryData.msg);
+                    $("#loginBtn").attr("disabled", false);
+                }
             });
         });
     });
