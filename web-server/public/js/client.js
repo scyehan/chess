@@ -1,5 +1,5 @@
 var pomelo = window.pomelo;
-var host = "192.168.1.120";
+var host = "127.0.0.1";
 var queryPort = "3014";
 var port;
 var myrole;

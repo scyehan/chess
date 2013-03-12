@@ -5,7 +5,7 @@ var pomelo = require('pomelo');
  */
 var app = pomelo.createApp();
 app.set('name', 'chess');
-app.defaultConfiguration();
+//app.defaultConfiguration();
 
 var route = function(session, msg, app, cb) {
 	var chessServers = app.getServersByType('chess');
